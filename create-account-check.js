@@ -125,7 +125,6 @@ class CreateAccountCheck extends PolymerElement {
       console.log('receiver: ' + receiver)
       console.log('owner: ' + owner)
       console.log('active: ' + active)
-      console.log('chainId: ' + chainId)
       console.log('bytes: ' + bytes)
       console.log('stake_net_quantity: ' + stake_net_quantity)
       console.log('stake_cpu_quantity: ' + stake_cpu_quantity)

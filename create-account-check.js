@@ -19,7 +19,7 @@ class CreateAccountCheck extends PolymerElement {
           width: 300px;
         }
       </style>
-      <form>
+  
         <fieldset>
           <legend>EOS: Connect and make an account</legend>
           <p>
@@ -43,13 +43,10 @@ class CreateAccountCheck extends PolymerElement {
             <input type="text" name="activePublicKey" id="activePublicKey">
             <label for="activePublicKey">activePublicKey</label>
           </p>
-
           <p> 
-            <button type="submit" on-click="_start">Make Account</button> 
+            <button type="button" on-click="_start">Make Account</button> 
           </p>
-
         </fieldset>
-      </form>
     `;
   }
   static get properties() {
@@ -64,7 +61,6 @@ class CreateAccountCheck extends PolymerElement {
   _start() {
     this._connect()
     .then((eos) =>{
-      console.log(eos)
       return this._makeAccount(eos)
     })
     .then((result) =>{
@@ -77,18 +73,14 @@ class CreateAccountCheck extends PolymerElement {
 
 
   _connect(){
-    console.log(this.shadowRoot.querySelector('#keyProvider').value)
     return new Promise((resolve, reject) => {
-      const config = {
-        keyProvider: this.shadowRoot.querySelector('#keyProvider').value, 
-        httpEndpoint: "https://api.eosnewyork.io",
-        broadcast: true,
-        sign: true,
-        chainId: "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
-        expireInSeconds: 30
-      }
-      this.eos = Eos(config)
-      console.log(this.eos)
+      var keyProvider = this.shadowRoot.querySelector('#keyProvider').value;
+      var httpEndpoint = "https://api.eosnewyork.io";
+      var broadcast = true;
+      var sign = true;
+      var chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906";
+      var expireInSeconds = 30;
+      this.eos = Eos({keyProvider, httpEndpoint, broadcast, sign, chainId, expireInSeconds})
       resolve(this.eos);
     })
   }
@@ -96,34 +88,32 @@ class CreateAccountCheck extends PolymerElement {
 
 
   _makeAccount(eos) {
-    console.log(eos)
-    eos.transaction(tr => {
-      tr.newaccount({
-        creator: this.shadowRoot.querySelector('#creatorAccountName').value,
-        name: this.shadowRoot.querySelector('#newAccountName').value,
-        owner: this.shadowRoot.querySelector('#ownerPublicKey').value,
-        active: this.shadowRoot.querySelector('#activePublicKey').value,
+    return new Promise((resolve, reject) => {
+      var creator = this.shadowRoot.querySelector('#creatorAccountName').value;
+      var name = this.shadowRoot.querySelector('#newAccountName').value;
+      var owner = this.shadowRoot.querySelector('#ownerPublicKey').value;
+      var active = this.shadowRoot.querySelector('#activePublicKey').value;
+      var payer = this.shadowRoot.querySelector('#creatorAccountName').value;
+      var receiver = this.shadowRoot.querySelector('#newAccountName').value
+      var from = this.shadowRoot.querySelector('#creatorAccountName').value;
+      var receiver = this.shadowRoot.querySelector('#newAccountName').value;
+      var bytes = 8000;
+      var stake_net_quantity = '0.0200 EOS';
+      var stake_cpu_quantity = '0.0200 EOS';
+      var transfer = 0;
+      eos.transaction(tr => {
+        tr.newaccount({creator, name, owner, active})
+        tr.buyrambytes({payer, receiver, bytes})
+        tr.delegatebw({from, receiver, stake_net_quantity, stake_cpu_quantity, transfer})
       })
-      tr.buyrambytes({
-        payer: this.shadowRoot.querySelector('#creatorAccountName').value,
-        receiver: this.shadowRoot.querySelector('#newAccountName').value,
-        bytes: 8000
+      .then((response) =>{
+        console.log(response)
+        resolve(response)
       })
-      tr.delegatebw({
-        from: this.shadowRoot.querySelector('#creatorAccountName').value,
-        receiver: this.shadowRoot.querySelector('#newAccountName').value,
-        stake_net_quantity: '0.0200 EOS',
-        stake_cpu_quantity: '0.0200 EOS',
-        transfer: 0
+      .catch((err) =>{
+        console.log(err)
+        reject(err)
       })
-    })
-    .then((response) =>{
-      console.log("response")
-      console.log(response)
-    })
-    .catch((err) =>{
-      console.log("err")
-      console.log(err)
     })
   }
 

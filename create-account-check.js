@@ -112,7 +112,6 @@ class CreateAccountCheck extends PolymerElement {
       const receiver = this.shadowRoot.querySelector('#newAccountName').value;
       const owner = this.shadowRoot.querySelector('#ownerPublicKey').value;
       const active = this.shadowRoot.querySelector('#activePublicKey').value;
-      const chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906";
       const bytes = 7900;
       const stake_net_quantity = '0.1000 EOS';
       const stake_cpu_quantity = '0.1000 EOS';
@@ -133,9 +132,9 @@ class CreateAccountCheck extends PolymerElement {
       console.log('transfer: ' + transfer)
 
       eos.transaction(tr => {
-        tr.newaccount({creator, name, owner, active, chainId})
-        tr.buyrambytes({payer, receiver, bytes, chainId})
-        tr.delegatebw({from, receiver, stake_net_quantity, stake_cpu_quantity, transfer, chainId})
+        tr.newaccount({creator, name, owner, active})
+        tr.buyrambytes({payer, receiver, bytes})
+        tr.delegatebw({from, receiver, stake_net_quantity, stake_cpu_quantity, transfer})
       })
       .then((response) => {
         resolve(response)

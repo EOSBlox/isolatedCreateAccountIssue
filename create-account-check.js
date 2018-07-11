@@ -87,7 +87,7 @@ class CreateAccountCheck extends PolymerElement {
         chainId: "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
         expireInSeconds: 30
       }
-      this.eos = Eos.Localnet(config)
+      this.eos = Eos(config)
       console.log(this.eos)
       resolve(this.eos);
     })
@@ -107,15 +107,23 @@ class CreateAccountCheck extends PolymerElement {
       tr.buyrambytes({
         payer: this.shadowRoot.querySelector('#creatorAccountName').value,
         receiver: this.shadowRoot.querySelector('#newAccountName').value,
-        bytes: 4000
+        bytes: 8000
       })
       tr.delegatebw({
         from: this.shadowRoot.querySelector('#creatorAccountName').value,
         receiver: this.shadowRoot.querySelector('#newAccountName').value,
-        stake_net_quantity: '0.001 EOS',
-        stake_cpu_quantity: '0.001 EOS',
+        stake_net_quantity: '0.0200 EOS',
+        stake_cpu_quantity: '0.0200 EOS',
         transfer: 0
       })
+    })
+    .then((response) =>{
+      console.log("response")
+      console.log(response)
+    })
+    .catch((err) =>{
+      console.log("err")
+      console.log(err)
     })
   }
 

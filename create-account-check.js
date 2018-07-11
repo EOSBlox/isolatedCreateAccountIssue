@@ -74,12 +74,14 @@ class CreateAccountCheck extends PolymerElement {
 
   _connect(){
     return new Promise((resolve, reject) => {
+      
       var keyProvider = this.shadowRoot.querySelector('#keyProvider').value;
       var httpEndpoint = "https://api.eosnewyork.io";
       var broadcast = true;
       var sign = true;
       var chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906";
       var expireInSeconds = 30;
+
       this.eos = Eos({keyProvider, httpEndpoint, broadcast, sign, chainId, expireInSeconds})
       resolve(this.eos);
     })
@@ -89,18 +91,16 @@ class CreateAccountCheck extends PolymerElement {
 
   _makeAccount(eos) {
     return new Promise((resolve, reject) => {
-      var creator = this.shadowRoot.querySelector('#creatorAccountName').value;
-      var name = this.shadowRoot.querySelector('#newAccountName').value;
+
+      var creator = payer = from = this.shadowRoot.querySelector('#creatorAccountName').value;
+      var name = receiver = this.shadowRoot.querySelector('#newAccountName').value;
       var owner = this.shadowRoot.querySelector('#ownerPublicKey').value;
       var active = this.shadowRoot.querySelector('#activePublicKey').value;
-      var payer = this.shadowRoot.querySelector('#creatorAccountName').value;
-      var receiver = this.shadowRoot.querySelector('#newAccountName').value
-      var from = this.shadowRoot.querySelector('#creatorAccountName').value;
-      var receiver = this.shadowRoot.querySelector('#newAccountName').value;
       var bytes = 8000;
       var stake_net_quantity = '0.0200 EOS';
       var stake_cpu_quantity = '0.0200 EOS';
       var transfer = 0;
+
       eos.transaction(tr => {
         tr.newaccount({creator, name, owner, active})
         tr.buyrambytes({payer, receiver, bytes})

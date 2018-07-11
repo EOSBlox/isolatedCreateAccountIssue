@@ -82,8 +82,8 @@ class CreateAccountCheck extends PolymerElement {
       const chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906";
       const expireInSeconds = 30;
 
-      this.eos = Eos({keyProvider, httpEndpoint, broadcast, sign, chainId, expireInSeconds})
-      resolve(this.eos);
+      const eos = Eos({keyProvider, httpEndpoint, broadcast, sign, chainId, expireInSeconds})
+      resolve(eos);
     })
   }
 
@@ -92,8 +92,11 @@ class CreateAccountCheck extends PolymerElement {
   _makeAccount(eos) {
     return new Promise((resolve, reject) => {
 
-      const creator = payer = from = this.shadowRoot.querySelector('#creatorAccountName').value;
-      const name = receiver = this.shadowRoot.querySelector('#newAccountName').value;
+      const creator = this.shadowRoot.querySelector('#creatorAccountName').value;
+      const payer = this.shadowRoot.querySelector('#creatorAccountName').value;
+      const from = this.shadowRoot.querySelector('#creatorAccountName').value;
+      const name = this.shadowRoot.querySelector('#newAccountName').value;
+      const receiver = this.shadowRoot.querySelector('#newAccountName').value;
       const owner = this.shadowRoot.querySelector('#ownerPublicKey').value;
       const active = this.shadowRoot.querySelector('#activePublicKey').value;
       const bytes = 8000;
